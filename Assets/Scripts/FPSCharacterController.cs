@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 public class FPSCharacterController : MonoBehaviour {
@@ -14,8 +15,13 @@ public class FPSCharacterController : MonoBehaviour {
     private float runSpeed = 8.0f;
 
     // Firing
+    public TextMeshProUGUI killCounter;
+    private int killCount = 0;
+    public GameObject paintSplat1;
+    public GameObject paintSplat2;
     private Transform cameraT;
-    private float range = 100.0f;
+    private float range = 50.0f;
+    private int damage = 10;
 
 
     void Start() {
@@ -36,6 +42,7 @@ public class FPSCharacterController : MonoBehaviour {
         hLook += hCameraMovement;
         vLook -= vCameraMovement;
         vLook = Mathf.Clamp(vLook, -75, 75);
+        transform.localRotation = Quaternion.Euler(vLook, hLook, 0.0f);
 
         // Player movement
         float hMovement = Input.GetAxis("Horizontal");
@@ -53,26 +60,29 @@ public class FPSCharacterController : MonoBehaviour {
         if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Space)) {
             Shoot();
         }
-
-        // Move player
-        transform.localRotation = Quaternion.Euler(vLook, hLook, 0.0f);
     }
 
     private void Shoot() {
-        Debug.Log("Fire!");
-
-        // Detect collisions in only enemy or ground layers
-        LayerMask groundMask = LayerMask.GetMask("Ground");
+        // Only hit the ground, buildings, or enemies
         LayerMask enemyMask = LayerMask.GetMask("Enemies");
+        LayerMask buildingMask = LayerMask.GetMask("Buildings");
+        LayerMask groundMask = LayerMask.GetMask("Ground");
+        int splatLayers = ~(1 << buildingMask.value << groundMask.value);
 
         // Detect collision
         RaycastHit hit;
-        if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, groundMask)) {
-            // Hit the ground
-
-        } else if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, enemyMask)) {
-            // Hit the enemy
-
+        if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, enemyMask)) {
+            // Hit the enemy for damage
+            if (hit.collider.GetComponent<EnemyController>().TakeDamage(damage)) {
+                // Update kill count when enemy dies
+                killCount++;
+                killCounter.text = "" + killCount;
+            }
+        } else if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, splatLayers)) {
+            // Make a paint splat if hit the terrain/a building
+            Instantiate((Random.Range(0, 2) == 0) ? paintSplat1 : paintSplat2,
+                hit.point + (0.01f * hit.normal),
+                Quaternion.LookRotation(-1 * hit.normal, hit.transform.up));
         }
     }
 }
