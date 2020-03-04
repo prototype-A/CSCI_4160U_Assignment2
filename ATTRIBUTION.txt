@@ -13,6 +13,12 @@ CC0 Public Domain
 https://opengameart.org/content/4k-seamless-grass-dirt-ground-texture-with-all-shader-maps
 
 
+"Crosshair pack (200×)" by Kenney
+CC0 Public Domain
+https://opengameart.org/content/crosshair-pack-200%C3%97
+
+
+
 
 CC-BY-SA 3.0 License:
 https://creativecommons.org/licenses/by-sa/3.0/

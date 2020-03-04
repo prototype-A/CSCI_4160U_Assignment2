@@ -12,13 +12,20 @@ public class FPSCharacterController : MonoBehaviour {
     private CharacterController charController;
     private float moveSpeed = 8.0f;
 
+    // Firing
+    private Transform cameraT;
+    private float range = 100.0f;
+
 
     void Start() {
         // Lock and hide cursor at center of screen
         Cursor.lockState = CursorLockMode.Locked;
 
+        // Get camera transform
+        this.cameraT = transform.Find("Main Camera");
+
         // Get Character Controller component
-        charController = GetComponent<CharacterController>();
+        this.charController = GetComponent<CharacterController>();
     }
 
     void Update() {
@@ -35,7 +42,30 @@ public class FPSCharacterController : MonoBehaviour {
         Vector3 movement = transform.right * hMovement + transform.forward * vMovement;
         charController.SimpleMove(movement * moveSpeed);
 
-        // Move player GameObject
+        // Fire
+        if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Space)) {
+            Shoot();
+        }
+
+        // Move player
         transform.localRotation = Quaternion.Euler(vLook, hLook, 0.0f);
+    }
+
+    private void Shoot() {
+        Debug.Log("Fire!");
+
+        // Detect collisions in only enemy or ground layers
+        LayerMask groundMask = LayerMask.GetMask("Ground");
+        LayerMask enemyMask = LayerMask.GetMask("Enemies");
+
+        // Detect collision
+        RaycastHit hit;
+        if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, groundMask)) {
+            // Hit the ground
+
+        } else if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, enemyMask)) {
+            // Hit the enemy
+
+        }
     }
 }
