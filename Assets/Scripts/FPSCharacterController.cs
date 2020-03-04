@@ -10,7 +10,8 @@ public class FPSCharacterController : MonoBehaviour {
 
     // Body
     private CharacterController charController;
-    private float moveSpeed = 8.0f;
+    private float walkSpeed = 4.5f;
+    private float runSpeed = 8.0f;
 
     // Firing
     private Transform cameraT;
@@ -40,7 +41,13 @@ public class FPSCharacterController : MonoBehaviour {
         float hMovement = Input.GetAxis("Horizontal");
         float vMovement = Input.GetAxis("Vertical");
         Vector3 movement = transform.right * hMovement + transform.forward * vMovement;
-        charController.SimpleMove(movement * moveSpeed);
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            // Running
+            charController.SimpleMove(movement * runSpeed);
+        } else {
+            // Walking
+            charController.SimpleMove(movement * walkSpeed);
+        }
 
         // Fire
         if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Space)) {
