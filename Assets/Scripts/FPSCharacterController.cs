@@ -22,6 +22,8 @@ public class FPSCharacterController : MonoBehaviour {
     private Transform cameraT;
     private float range = 50.0f;
     private int damage = 10;
+    public FlexibleColorPicker colorPicker;
+    private Color paintballColor = new Color(1.0f, 0, 0, 1.0f);
 
 
     void Start() {
@@ -57,8 +59,20 @@ public class FPSCharacterController : MonoBehaviour {
         }
 
         // Fire
-        if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Space)) {
+        if (Cursor.lockState == CursorLockMode.Locked && (Input.GetButtonDown("Fire1") || Input.GetKeyDown(KeyCode.Space))) {
             Shoot();
+        } else if (Input.GetKeyDown(KeyCode.Escape)) {
+            // Change cursor lock modes
+            if (Cursor.lockState == CursorLockMode.Locked) {
+                Cursor.lockState = CursorLockMode.None;
+            } else {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+
+        // Update paintball color
+        if (colorPicker.gameObject.activeSelf) {
+            this.paintballColor = colorPicker.color;
         }
     }
 
@@ -79,10 +93,12 @@ public class FPSCharacterController : MonoBehaviour {
                 killCounter.text = "" + killCount;
             }
         } else if (Physics.Raycast(cameraT.position, cameraT.forward, out hit, range, splatLayers)) {
-            // Make a paint splat if hit the terrain/a building
-            Instantiate((Random.Range(0, 2) == 0) ? paintSplat1 : paintSplat2,
-                hit.point + (0.01f * hit.normal),
-                Quaternion.LookRotation(-1 * hit.normal, hit.transform.up));
+            // Make a paint splat if hit the terrain or a building
+            GameObject paintballSplat = Instantiate((Random.Range(0, 2) == 0) ? paintSplat1 : paintSplat2,
+                                        hit.point + (0.01f * hit.normal),
+                                        Quaternion.LookRotation(-1 * hit.normal, hit.transform.up));
+            // Update paintball color
+            paintballSplat.GetComponent<MeshRenderer>().material.SetColor("_BaseColor", paintballColor);
         }
     }
 }

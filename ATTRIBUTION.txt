@@ -19,13 +19,19 @@ https://opengameart.org/content/crosshair-pack-200%C3%97
 
 
 Spartan Font
+Open Source
 https://fonts.google.com/
 
 
 Paint splats
+Personal Use
 https://dlpng.com/png/6731589
 https://pngimage.net/splat-png-5/
-http://clipart-library.com/clipart/di9r9brnT.htm
+
+
+"Flexible Color Picker" by Ward Dehairs
+Extension Asset
+https://assetstore.unity.com/packages/tools/gui/flexible-color-picker-150497
 
 
 
