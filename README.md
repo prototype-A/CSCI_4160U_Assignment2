@@ -7,6 +7,7 @@ CSCI 4160U Assignment 2: 3D Game Development
 * A/Left Arrow - Move left
 * D/Right Arrow - Move right
 * Left Ctrl/Left-Click/Space - Shoot
-  
+* Esc - Toggle between locked/free mouse cursor
+
 Tree foliage looks the way they do due to HDRP only supporting its material shaders and making all other shaders display pink.
 I should not have used HDRP...
